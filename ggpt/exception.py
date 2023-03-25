@@ -11,7 +11,12 @@ class GGptException(Exception, ABC):
 
 class NotGitRepositoryError(GGptException):
     def __init__(self, path: str):
-        message = f"The path '{path}' is not a valid Git repository.\n\nPlease make sure that the path points to a valid Git repository."
+        message = (
+            f"The path '{path}' is not a valid Git repository.\n\n"
+            "Please ensure that you are in a directory that is a Git repository.\n\n\n"
+            "Alternatively, you can use the --path option with the correct path to the Git repository.\n\n"
+            "\tggpt <COMMAND> --path=<YOUR_GIT_PROJECT_PATH>"
+        )
         super().__init__(message)
 
 
@@ -31,7 +36,6 @@ class GitDiffTooLongError(GGptException):
             f"- Refactor the code to reduce the size of the diff.\n"
             f"- Split the changes into smaller and more manageable diff block."
         )
-
         super().__init__(message)
 
 
@@ -45,12 +49,10 @@ class APIKeyError(GGptException):
             f"\texport OPENAI_API_KEY=<YOUR_API_KEY_HERE>\n\n\n"
             f"To generate a new API key, please visit https://beta.openai.com/account/api-keys"
         )
-
         super().__init__(message)
 
 
 class NotImplementedCommandError(GGptException):
     def __init__(self, command: str):
         message = f"Command '{command}' is not implemented."
-
         super().__init__(message)
