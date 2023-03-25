@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ggpt"
 version = "0.1.0"
-description = ""
+description = "Gorgueous CLI tools using GPT"
 authors = ["jenz0000 <fullswing0603@gmail.com>"]
 readme = "README.md"
 
@@ -11,6 +11,8 @@ click = "^8.1.3"
 openai = "^0.27.2"
 rich = "^13.3.2"
 
+[tool.poetry.scripts]
+ggpt = "ggpt.cli:cli"
 
 [build-system]
 requires = ["poetry-core"]
