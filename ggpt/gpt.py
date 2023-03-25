@@ -98,3 +98,36 @@ class GPTClient:
         finish_text = re.sub(r"(?<!\n)\n(?!\n)", "\n\n", finish_text)
 
         return finish_text
+
+    def request_docstring(self, diff: str) -> str:
+        """
+        Generates a docstring for code changes specified by the `diff` argument
+        using OpenAI's GPT API.
+
+        Args:
+            diff (str): The Git diff to generate a docstring for.
+
+        Returns:
+            str: The generated docstring text from the GPT-3 API.
+        """
+        openai.api_key = self.api_key
+
+        prompt = (
+            "Create a Docstring for every part that you can add one to.\n"
+            "When creating a docstring, please include the function name and arguments.\n"
+            "The code diff looks like\n"
+            "==========BEGIN==========\n"
+            f"{diff}"
+            "==========END==========\n"
+        )
+
+        max_tokens = self.get_max_tokens(prompt)
+
+        response = self.request(prompt=prompt, max_tokens=max_tokens)
+
+        finish_text = response.choices[0].text.strip()
+        finish_reason = response.choices[0]["finish_reason"]
+
+        finish_text = re.sub(r"(?<!\n)\n(?!\n)", "\n\n", finish_text)
+
+        return finish_text

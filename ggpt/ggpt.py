@@ -88,3 +88,14 @@ class GGPT:
         """
         diff = get_diff(self.path, self.hash, self.staged_only)
         return self.gpt_client.request_review(diff)
+
+    def run_DOCSTRING(self):
+        """
+        Requests a docstring generation from OpenAI's GPT API for the Git diff between the current
+        repository state and the specified commit hash or staged files.
+
+        Returns:
+            str: The generated docstring text from the GPT API.
+        """
+        diff = get_diff(self.path, self.hash, self.staged_only)
+        return self.gpt_client.request_docstring(diff)
