@@ -15,9 +15,9 @@ class NotGitRepositoryError(GGptException):
         super().__init__(message)
 
 
-class NoChangesError(GGptException):
+class NoContentError(GGptException):
     def __init__(self):
-        message = "There are no differences in the changes."
+        message = "There is no content to request."
         super().__init__(message)
 
 

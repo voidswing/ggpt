@@ -7,7 +7,7 @@ from typing import Optional
 from ggpt.exception import (
     NotGitRepositoryError,
     GitDiffTooLongError,
-    NoChangesError,
+    NoContentError,
 )
 from ggpt.const import (
     DEFAULT_MAX_TOKEN,
@@ -101,7 +101,7 @@ def get_diff(path: str, hash: Optional[str] = None, staged_only: bool = False) -
         str: The Git diff for the repository.
 
     Raises:
-        NoChangesError: If the Git hash does not exist or there are no changes in the diff.
+        NoContentError: If the Git hash does not exist or there are no changes in the diff.
         GitDiffTooLongError: If the length of the Git diff is greater than MAX_DIFF_LENGTH.
     """
     if not is_git_repository(path):
@@ -119,12 +119,12 @@ def get_diff(path: str, hash: Optional[str] = None, staged_only: bool = False) -
         result = subprocess.run(diff_command, cwd=path, capture_output=True, check=True, text=True)
         diff = result.stdout
     except subprocess.CalledProcessError:
-        raise NoChangesError()
+        raise NoContentError()
 
     diff = diff.strip()
 
     if not diff:
-        raise NoChangesError()
+        raise NoContentError()
 
     if len(diff) > MAX_DIFF_LENGTH:
         raise GitDiffTooLongError(len(diff))

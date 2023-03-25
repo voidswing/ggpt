@@ -21,6 +21,7 @@ class GPTClient:
             api_key (str): The API key to use for the OpenAI API.
         """
         self.api_key = api_key
+        openai.api_key = self.api_key
 
     def get_max_tokens(self, prompt: str, max_token_limit: int = OPENAI_API_MAX_TOKENS) -> int:
         """
@@ -69,7 +70,6 @@ class GPTClient:
         Returns:
             The generated code review.
         """
-        openai.api_key = self.api_key
 
         prompt = (
             "You're going to act as a code reviewer from now on. "
@@ -110,8 +110,6 @@ class GPTClient:
         Returns:
             str: The generated docstring text from the GPT-3 API.
         """
-        openai.api_key = self.api_key
-
         prompt = (
             "Create a Docstring for every part that you can add one to.\n"
             "When creating a docstring, please include the function name and arguments.\n"
@@ -124,6 +122,31 @@ class GPTClient:
         max_tokens = self.get_max_tokens(prompt)
 
         response = self.request(prompt=prompt, max_tokens=max_tokens)
+
+        finish_text = response.choices[0].text.strip()
+        finish_reason = response.choices[0]["finish_reason"]
+
+        finish_text = re.sub(r"(?<!\n)\n(?!\n)", "\n\n", finish_text)
+
+        return finish_text
+
+    def request_naming(self, user_prompt: str) -> str:
+        """
+        Generates a variable name suggestion for the user-provided prompt
+        using OpenAI's GPT API.
+
+        Args:
+            user_prompt (str): The prompt to generate a variable name for.
+
+        Returns:
+            str: The generated variable name suggestion from the GPT-3 API.
+        """
+        prompt = (
+            f"I need to turn `{user_prompt}` into a proper variable in my software programming. Can you suggest a variable name?\n"
+            "Please answer camelCase, PascalCase, sanke_case, and BIG_SNAKE_CASE respectively."
+        )
+
+        response = self.request(prompt=prompt, max_tokens=3000)
 
         finish_text = response.choices[0].text.strip()
         finish_reason = response.choices[0]["finish_reason"]

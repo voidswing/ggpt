@@ -49,5 +49,18 @@ def docstring(api_key=None, path=None, hash=None, staged=False):
     ggpt.run()
 
 
+@cli.command()
+@click.argument("prompt", type=str)
+@click.option("--api-key", type=str, help="OpenAI API Key")
+def naming(prompt: str, api_key=None):
+    ggpt = GGPT(
+        command="naming",
+        api_key=api_key,
+        user_prompt=prompt,
+    )
+
+    ggpt.run()
+
+
 if __name__ == "__main__":
     cli()

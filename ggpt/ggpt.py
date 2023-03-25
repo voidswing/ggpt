@@ -14,6 +14,7 @@ from ggpt.utils import get_diff
 from ggpt.exception import (
     GGptException,
     APIKeyError,
+    NoContentError,
     NotImplementedCommandError,
 )
 
@@ -25,6 +26,7 @@ class GGPT:
     api_key: Optional[str] = None
     path: str = None
     command: str = None
+    user_prompt: str = None
     console: Console = Console()
     max_token: int = DEFAULT_MAX_TOKEN
 
@@ -99,3 +101,19 @@ class GGPT:
         """
         diff = get_diff(self.path, self.hash, self.staged_only)
         return self.gpt_client.request_docstring(diff)
+
+    def run_NAMING(self):
+        """
+        Generates variable name suggestions for a user-provided prompt using OpenAI's GPT API.
+
+        Raises:
+            NoContentError: If the user prompt is empty or contains only whitespace.
+
+        Returns:
+            str: The generated variable name suggestion from the GPT API.
+        """
+        user_prompt = self.user_prompt.strip()
+        if not user_prompt:
+            raise NoContentError()
+
+        return self.gpt_client.request_naming(self.user_prompt)
