@@ -55,7 +55,7 @@ class GPTClient:
             engine="text-davinci-003",
             prompt=prompt,
             max_tokens=max_tokens,
-            temperature=0.7,
+            temperature=0.3,
             frequency_penalty=0.0,
             presence_penalty=0.0,
         )
