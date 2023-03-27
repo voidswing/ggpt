@@ -70,22 +70,22 @@ class GPTClient:
         Returns:
             The generated code review.
         """
-
         prompt = (
-            "You're going to act as a code reviewer from now on. "
-            "As a code reviewer, please check the following:\n"
-            "- Are there any bugs?\n"
-            "- Are there any typos?\n"
-            "- Is there code that is not readable or that severely violates code conventions?\n"
-            "- Is there a way to structurally or fundamentally improve the code?\n"
+            "As an experienced software developer, please provide a detailed and actionable code review for the following code changes.\n"
+            "Consider the following aspects in your review:\n"
+            "- Code correctness and potential bugs\n"
+            "- Code readability and maintainability\n"
+            "- Code efficiency and performance\n"
+            "- Code modularity and organization\n"
+            "- Compliance with best practices and coding standards\n"
             "Anything that starts with + is added, and anything that starts with - is removed.\n"
-            "The code changes you need to review are as follows.\n"
+            "The code changes you need to review are as follows:\n"
             "==========BEGIN==========\n"
             f"{diff}"
             "==========END==========\n"
-            "If there's nothing to feedback, just tell me 'Looks good to me'"
-            "If there is something you want to point out, start and only use ordinal expressions, like\n"
-            "1. ~~~~\n2. ~~~~\n3. ~~~~\n... and so on  \n"
+            "If there's nothing to feedback, just tell me 'Looks good to me'. "
+            "If there is something you want to point out, start and only use ordinal expressions, like "
+            "1. ~~~~\n2. ~~~~\n3. ~~~~\n... and so on.\n"
         )
 
         max_tokens = self.get_max_tokens(prompt)
@@ -111,9 +111,15 @@ class GPTClient:
             str: The generated docstring text from the GPT-3 API.
         """
         prompt = (
-            "Create a Docstring for every part that you can add one to.\n"
-            "When creating a docstring, please include the function name and arguments.\n"
-            "The code diff looks like\n"
+            "Please generate comprehensive, detailed, and accurate docstrings for every function or class that needs one. "
+            "Your docstring should include the following information when applicable:\n"
+            "- Function or class purpose\n"
+            "- Description of input parameters (name, type, purpose)\n"
+            "- Description of return values (type, purpose)\n"
+            "- Description of exceptions raised\n"
+            "- Any other relevant information\n\n"
+            "Detect the programming language used in the code diff and format the docstrings accordingly.\n"
+            "The code diff looks like:\n"
             "==========BEGIN==========\n"
             f"{diff}"
             "==========END==========\n"
@@ -142,11 +148,17 @@ class GPTClient:
             str: The generated variable name suggestion from the GPT-3 API.
         """
         prompt = (
-            f"I need to turn `{user_prompt}` into a proper variable in my software programming. Can you suggest a variable name?\n"
-            "Please answer camelCase, PascalCase, sanke_case, and BIG_SNAKE_CASE respectively."
+            f"Based on the description '{user_prompt}', please suggest a meaningful and descriptive variable name that adheres to commonly used naming conventions in programming. "
+            "Provide the variable name in the following formats:\n"
+            "- camelCase\n"
+            "- PascalCase\n"
+            "- snake_case\n"
+            "- BIG_SNAKE_CASE\n"
         )
 
-        response = self.request(prompt=prompt, max_tokens=3000)
+        max_tokens = self.get_max_tokens(prompt)
+
+        response = self.request(prompt=prompt, max_tokens=max_tokens)
 
         finish_text = response.choices[0].text.strip()
         finish_reason = response.choices[0]["finish_reason"]
