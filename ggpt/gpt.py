@@ -10,6 +10,7 @@ from ggpt.const import (
     CHARACTERS_PER_TOKEN,
     OPENAI_API_MAX_TOKENS,
 )
+from ggpt.exception import InvalidAPIKeyError
 
 
 class GPTClient:
@@ -50,15 +51,23 @@ class GPTClient:
 
         Returns:
             The response from the API.
+
+        Raises:
+            InvalidAPIKeyError: If the OpenAI API key is invalid or not set.
         """
-        return openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=max_tokens,
-            temperature=0.3,
-            frequency_penalty=0.0,
-            presence_penalty=0.0,
-        )
+        try:
+            response = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt=prompt,
+                max_tokens=max_tokens,
+                temperature=0.3,
+                frequency_penalty=0.0,
+                presence_penalty=0.0,
+            )
+
+            return response
+        except openai.error.AuthenticationError:
+            raise InvalidAPIKeyError()
 
     def request_review(self, diff: str) -> str:
         """

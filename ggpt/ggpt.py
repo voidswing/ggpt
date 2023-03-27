@@ -31,42 +31,25 @@ class GGPT:
     max_token: int = DEFAULT_MAX_TOKEN
 
     def __post_init__(self):
-        """
-        Initializes a new instance of the GGPT class and sets up the GPTClient instance.
-        """
-        self.set_path()
-        self.set_api_key()
-
-        self.gpt_client = GPTClient(api_key=self.api_key)
-
-    def set_path(self):
-        """
-        Sets the path for the GGPT instance, if it is not already set.
-        """
         if self.path is None:
             self.path = os.getcwd()
 
-    def set_api_key(self):
-        """
-        Sets the OpenAI API key for the GGPT instance.
-        If an API key is already set, this method does nothing.
-
-        Raises:
-            APIKeyError: If the API key is not set, either through an environment
-            variable or the --api-key CLI option. Provides instructions for setting
-            the API key through either method.
-        """
+    def set_gpt_client(self):
         if self.api_key is None:
             self.api_key = os.getenv("OPENAI_API_KEY")
 
         if self.api_key is None:
             raise APIKeyError(self.command)
 
+        self.gpt_client = GPTClient(api_key=self.api_key)
+
     def run(self):
         """
         Runs the GGPT command specified by the `command` attribute and displays the response.
         """
         try:
+            self.set_gpt_client()
+
             command = getattr(self, f"run_{self.command.upper()}", None)
             if command is None:
                 raise NotImplementedCommandError(self.command)

@@ -56,3 +56,12 @@ class NotImplementedCommandError(GGptException):
     def __init__(self, command: str):
         message = f"Command '{command}' is not implemented."
         super().__init__(message)
+
+
+class InvalidAPIKeyError(GGptException):
+    def __init__(self):
+        message = (
+            f"The OpenAI API key is invalid. Please check that you have entered a valid API key.\n\n"
+            f"To generate a new API key, please visit https://beta.openai.com/account/api-keys"
+        )
+        super().__init__(message)
