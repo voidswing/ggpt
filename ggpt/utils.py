@@ -33,61 +33,6 @@ def is_git_repository(path: str) -> bool:
     return True
 
 
-def get_git_diff_result(path: str, cached_only: bool = False) -> Optional[str]:
-    """
-    Get the Git diff for the given Git repository path.
-
-    Args:
-        path (str): The path to the Git repository.
-        cached_only (bool): True to show the diff of the staged changes, False to show the diff of unstaged changes.
-
-    Returns:
-        Optional[str]: The Git diff for the repository, or None if an error occurred.
-    """
-    if not is_git_repository(path):
-        raise NotGitRepositoryError(path)
-
-    diff_command = ["git", "diff"]
-    if cached_only:
-        diff_command.append("--cached")
-
-    try:
-        result = subprocess.run(diff_command, cwd=path, capture_output=True, check=True, text=True)
-        return result.stdout
-    except subprocess.CalledProcessError:
-        return None
-
-
-def get_git_show_result(path: str, git_hash: Optional[str]) -> Optional[str]:
-    """
-    Get the result of `git show {git_hash}` for the given Git repository path.
-
-    Args:
-        path (str): The path to the Git repository.
-        git_hash (Optional[str]): The hash of the commit to show. If None, show the result of `git show HEAD`.
-
-    Returns:
-        Optional[str]: The result of `git show {git_hash}` for the repository, or None if an error occurred.
-    """
-    if not is_git_repository(path):
-        raise NotGitRepositoryError(path)
-
-    git_command = ["git", "show"]
-    if git_hash:
-        git_command.append(git_hash)
-    else:
-        git_command.append("HEAD")
-
-    try:
-        result = subprocess.run(git_command, cwd=path, capture_output=True, check=True, text=True)
-        return result.stdout
-    except subprocess.CalledProcessError:
-        import traceback
-
-        traceback.print_exc()
-        return None
-
-
 def get_diff(path: str, hash: Optional[str] = None, staged_only: bool = False) -> str:
     """
     Get the diff for the given Git repository based on the options set.
