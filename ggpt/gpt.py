@@ -150,8 +150,6 @@ class GPTClient:
         finish_text = response.choices[0].text.strip()
         finish_reason = response.choices[0]["finish_reason"]
 
-        finish_text = re.sub(r"(?<!\n)\n(?!\n)", "\n\n", finish_text)
-
         return finish_text
 
     def request_naming(self, user_prompt: str) -> str:
