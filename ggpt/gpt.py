@@ -34,8 +34,17 @@ class GPTClient:
 
         Returns:
             int: The maximum number of tokens to send in an OpenAI API request.
-        """
 
+        Comments:
+        The OpenAI API has a limit on the maximum number of tokens that can be sent in a single request.
+        This method calculates the maximum number of tokens that can be sent by subtracting the number of tokens
+        already in the prompt from the maximum limit allowed by the API.
+
+        Currently, the `OPENAI_API_MAX_TOKENS` constant is set to 4076, which is the maximum limit for the
+        text-davinci-002 and text-davinci-003 engines. However, this may change in the future, and GPT-4
+        may support a much higher number of tokens per request. In that case, this method will need to be
+        updated to reflect the new maximum limit.
+        """
         prompt_tokens = int(len(prompt) // CHARACTERS_PER_TOKEN)
         max_tokens = max_token_limit - prompt_tokens
 
