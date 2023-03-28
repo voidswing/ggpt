@@ -12,7 +12,7 @@ def cli():
 
 @cli.command()
 @click.option("--api-key", type=str, help="OpenAI API Key.")
-@click.option("--path", type=str, help="Path to the Git repository to be used for the command.")
+@click.option("--path", type=click.Path(exists=True, file_okay=False), help="Path to the Git project folder to be used for the command.")
 @click.option("--hash", type=str, help="Include specific hash value of the commit.")
 @click.option("--staged", is_flag=True, help="Include only staged changes.")
 def review(api_key=None, path=None, hash=None, staged=False):
@@ -32,7 +32,7 @@ def review(api_key=None, path=None, hash=None, staged=False):
 
 @cli.command()
 @click.option("--api-key", type=str, help="OpenAI API Key")
-@click.option("--path", type=str, help="Path to the Git repository to be used for the command.")
+@click.option("--path", type=click.Path(exists=True, file_okay=False), help="Path to the Git project folder to be used for the command.")
 @click.option("--hash", type=str, help="Include specific hash value of the commit.")
 @click.option("--staged", is_flag=True, help="Include only staged changes.")
 def docstring(api_key=None, path=None, hash=None, staged=False):
