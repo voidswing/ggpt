@@ -1,0 +1,36 @@
+name: Publish
+
+# Trigger the workflow when a new release is created
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  publish:
+    # Set the job to run on an Ubuntu latest machine
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository at the current release
+      - uses: actions/checkout@v2
+
+      # Set up the Python environment using the actions/setup-python action
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      # Install Poetry using pip
+      - name: Install poetry
+        run: pip install poetry
+
+      # Install the package dependencies using Poetry
+      - name: Install Dependencies
+        run: poetry install
+
+      # Publish the package using Poetry, using the PyPI token secret as authentication
+      - name: Publish
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+        run: poetry publish --build
