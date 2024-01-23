@@ -64,10 +64,17 @@ class GPTClient:
         Raises:
             InvalidAPIKeyError: If the OpenAI API key is invalid or not set.
         """
+        messages = [
+            {
+                "role": "user",
+                "content": prompt,
+            }
+        ]
+
         try:
-            response = openai.Completion.create(
-                engine="text-davinci-003",
-                prompt=prompt,
+            response = openai.chat.completions.create(
+                model="gpt-4-1106-preview",
+                messages=messages,
                 max_tokens=max_tokens,
                 temperature=0.3,
                 frequency_penalty=0.0,
@@ -110,9 +117,7 @@ class GPTClient:
 
         response = self.request(prompt=prompt, max_tokens=max_tokens)
 
-        finish_text = response.choices[0].text.strip()
-        finish_reason = response.choices[0]["finish_reason"]
-
+        finish_text = response.choices[0].message.content
         finish_text = re.sub(r"(?<!\n)\n(?!\n)", "\n\n", finish_text)
 
         return finish_text
@@ -147,8 +152,7 @@ class GPTClient:
 
         response = self.request(prompt=prompt, max_tokens=max_tokens)
 
-        finish_text = response.choices[0].text.strip()
-        finish_reason = response.choices[0]["finish_reason"]
+        finish_text = response.choices[0].message.content
 
         return finish_text
 
@@ -176,9 +180,7 @@ class GPTClient:
 
         response = self.request(prompt=prompt, max_tokens=max_tokens)
 
-        finish_text = response.choices[0].text.strip()
-        finish_reason = response.choices[0]["finish_reason"]
-
+        finish_text = response.choices[0].message.content
         finish_text = re.sub(r"(?<!\n)\n(?!\n)", "\n\n", finish_text)
 
         return finish_text
