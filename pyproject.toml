@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ggpt"
-version = "0.1.4"
+version = "0.2.0"
 description = "Gorgeous CLI tools using GPT"
 authors = ["jenz0000 <fullswing0603@gmail.com>"]
 readme = "README.md"
