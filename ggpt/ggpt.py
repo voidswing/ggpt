@@ -6,10 +6,6 @@ from dataclasses import dataclass
 # ggpt
 from ggpt.console import Console
 from ggpt.gpt import GPTClient
-from ggpt.const import (
-    DEFAULT_MAX_TOKEN,
-    MAX_DIFF_LENGTH,
-)
 from ggpt.utils import get_diff
 from ggpt.exception import (
     GGptException,
@@ -28,7 +24,6 @@ class GGPT:
     command: str = None
     user_prompt: str = None
     console: Console = Console()
-    max_token: int = DEFAULT_MAX_TOKEN
 
     def __post_init__(self):
         if self.path is None:

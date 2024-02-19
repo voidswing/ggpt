@@ -2,7 +2,7 @@
 from abc import ABC
 
 # ggpt
-from ggpt.const import MAX_DIFF_LENGTH
+from ggpt.const import MAX_DIFF_LENGTH, OPENAI_API_KEY_URL
 
 
 class GGptException(Exception, ABC):
@@ -47,7 +47,7 @@ class APIKeyError(GGptException):
             f"\tggpt {command} --api-key <YOUR_API_KEY_HERE>\n\n\n"
             f"To set the API key using an environment variable, please add the following line to your shell profile:\n\n"
             f"\texport OPENAI_API_KEY=<YOUR_API_KEY_HERE>\n\n\n"
-            f"To generate a new API key, please visit https://beta.openai.com/account/api-keys"
+            f"To generate a new API key, please visit {OPENAI_API_KEY_URL}"
         )
         super().__init__(message)
 

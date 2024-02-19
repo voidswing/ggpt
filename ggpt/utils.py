@@ -10,7 +10,6 @@ from ggpt.exception import (
     NoContentError,
 )
 from ggpt.const import (
-    DEFAULT_MAX_TOKEN,
     MAX_DIFF_LENGTH,
 )
 

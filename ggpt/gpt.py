@@ -6,10 +6,6 @@ from typing import Optional
 import openai
 
 # ggpt
-from ggpt.const import (
-    CHARACTERS_PER_TOKEN,
-    OPENAI_API_MAX_TOKENS,
-)
 from ggpt.exception import InvalidAPIKeyError
 
 
@@ -24,39 +20,12 @@ class GPTClient:
         self.api_key = api_key
         openai.api_key = self.api_key
 
-    def get_max_tokens(self, prompt: str, max_token_limit: int = OPENAI_API_MAX_TOKENS) -> int:
-        """
-        Calculate the maximum number of tokens to send in an OpenAI API request.
-
-        Args:
-            prompt (str): The prompt string to calculate the maximum number of tokens for.
-            max_token_limit (int): The maximum number of tokens allowed per API request. Default is 4076.
-
-        Returns:
-            int: The maximum number of tokens to send in an OpenAI API request.
-
-        Comments:
-        The OpenAI API has a limit on the maximum number of tokens that can be sent in a single request.
-        This method calculates the maximum number of tokens that can be sent by subtracting the number of tokens
-        already in the prompt from the maximum limit allowed by the API.
-
-        Currently, the `OPENAI_API_MAX_TOKENS` constant is set to 4076, which is the maximum limit for the
-        text-davinci-002 and text-davinci-003 engines. However, this may change in the future, and GPT-4
-        may support a much higher number of tokens per request. In that case, this method will need to be
-        updated to reflect the new maximum limit.
-        """
-        prompt_tokens = int(len(prompt) // CHARACTERS_PER_TOKEN)
-        max_tokens = max_token_limit - prompt_tokens
-
-        return max_tokens
-
-    def request(self, prompt: str, max_tokens: int):
+    def request(self, prompt: str):
         """
         Sends a request to the OpenAI API.
 
         Args:
             prompt (str): The prompt to send to the API.
-            max_tokens (int): The maximum number of tokens to generate in the response.
 
         Returns:
             The response from the API.
@@ -75,7 +44,6 @@ class GPTClient:
             response = openai.chat.completions.create(
                 model="gpt-4-1106-preview",
                 messages=messages,
-                max_tokens=max_tokens,
                 temperature=0.3,
                 frequency_penalty=0.0,
                 presence_penalty=0.0,
@@ -113,9 +81,7 @@ class GPTClient:
             "1. ~~~~\n2. ~~~~\n3. ~~~~\n... and so on.\n"
         )
 
-        max_tokens = self.get_max_tokens(prompt)
-
-        response = self.request(prompt=prompt, max_tokens=max_tokens)
+        response = self.request(prompt=prompt)
 
         finish_text = response.choices[0].message.content
         finish_text = re.sub(r"(?<!\n)\n(?!\n)", "\n\n", finish_text)
@@ -148,9 +114,7 @@ class GPTClient:
             "==========END==========\n"
         )
 
-        max_tokens = self.get_max_tokens(prompt)
-
-        response = self.request(prompt=prompt, max_tokens=max_tokens)
+        response = self.request(prompt=prompt)
 
         finish_text = response.choices[0].message.content
 
@@ -175,10 +139,7 @@ class GPTClient:
             "- snake_case\n"
             "- BIG_SNAKE_CASE\n"
         )
-
-        max_tokens = self.get_max_tokens(prompt)
-
-        response = self.request(prompt=prompt, max_tokens=max_tokens)
+        response = self.request(prompt=prompt)
 
         finish_text = response.choices[0].message.content
         finish_text = re.sub(r"(?<!\n)\n(?!\n)", "\n\n", finish_text)
