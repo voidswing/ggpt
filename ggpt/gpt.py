@@ -50,7 +50,7 @@ class GPTClient:
             )
 
             return response
-        except openai.error.AuthenticationError:
+        except openai.AuthenticationError:
             raise InvalidAPIKeyError()
 
     def request_review(self, diff: str) -> str:
